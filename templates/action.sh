@@ -19,3 +19,5 @@ down() { return 0; }
 
 # Called after up and down's execution.
 after() { return 0; }
+
+"$@"
