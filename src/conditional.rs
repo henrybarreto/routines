@@ -8,17 +8,15 @@ pub struct Conditional {
 impl Conditional {
     pub fn check(&self) -> bool {
         match self.condition.0 {
-            Conditions::Equal => self.data.clone() == self.condition.1.clone(),
+            Conditions::Equal => self.data== self.condition.1,
             Conditions::Great => {
                 let data = self
                     .data
-                    .clone()
                     .parse::<i32>()
                     .expect("Could not convert from string to number");
                 let condition = self
                     .condition
                     .1
-                    .clone()
                     .parse::<i32>()
                     .expect("Could not convert from string to number");
 
@@ -27,13 +25,11 @@ impl Conditional {
             Conditions::Less => {
                 let data = self
                     .data
-                    .clone()
                     .parse::<i32>()
                     .expect("Could not convert from string to number");
                 let condition = self
                     .condition
                     .1
-                    .clone()
                     .parse::<i32>()
                     .expect("Could not convert from string to number");
 
