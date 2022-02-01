@@ -7,18 +7,18 @@ pub struct Actor {
 impl Actor {
     fn check_outputs(mut list: Vec<i32>) -> i32 {
         let head: Option<&i32> = list.get(0);
-        if let None = head {
+        if head.is_none(){
             return 0;
         }
 
         let head = *head.unwrap();
         list.remove(0);
 
-        return if head != 0 {
+         if head != 0 {
             Self::check_outputs(list)
         } else {
             255
-        };
+        }
     }
 
     fn run(&self, func: &str) -> Option<i32> {
@@ -32,7 +32,7 @@ impl Actor {
     }
 
     fn get_code_from_run(option: Option<i32>) -> i32 {
-        return if let Some(code) = option {
+         if let Some(code) = option {
             if code != 0 {
                 code
             } else {
@@ -40,7 +40,7 @@ impl Actor {
             }
         } else {
             255
-        };
+        }
     }
 
     fn before(&self) -> Option<i32> {
@@ -51,17 +51,17 @@ impl Actor {
     }
 
     pub fn up(&self) -> i32 {
-        return Self::check_outputs(Vec::from([
+         Self::check_outputs(Vec::from([
             Self::get_code_from_run(self.before()),
             Self::get_code_from_run(self.run("up")),
             Self::get_code_from_run(self.after()),
-        ]));
+        ]))
     }
     pub fn down(&self) -> i32 {
-        return Self::check_outputs(Vec::from([
+         Self::check_outputs(Vec::from([
             Self::get_code_from_run(self.before()),
             Self::get_code_from_run(self.run("down")),
             Self::get_code_from_run(self.after()),
-        ]));
+        ]))
     }
 }

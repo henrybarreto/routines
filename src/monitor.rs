@@ -36,7 +36,7 @@ impl Monitor {
 
             closure(data);
 
-            thread::sleep(Duration::from_secs(interval.clone()));
+            thread::sleep(Duration::from_secs(interval));
         })
     }
 
@@ -51,21 +51,21 @@ impl Monitor {
     pub fn cpu_governor(&self, transport: mpsc::Sender<String>) -> JoinHandle<()> {
         Self::monitor(
             Self::CPU_GOVERNOR_FILE_PATH,
-            self.interval.clone(),
+            self.interval,
             move |data| Self::common(data, transport.clone()),
         )
     }
     pub fn cpu_frequency(&self, transport: mpsc::Sender<String>) -> JoinHandle<()> {
         Self::monitor(
             Self::CPU_FREQUENCY_FILE_PATH,
-            self.interval.clone(),
+            self.interval,
             move |data| Self::common(data, transport.clone()),
         )
     }
     pub fn battery_level(&self, transport: mpsc::Sender<String>) -> JoinHandle<()> {
         Self::monitor(
             Self::BATTERY_LEVEL_FILE_PATH,
-            self.interval.clone(),
+            self.interval,
             move |data| Self::common(data, transport.clone()),
         )
     }
