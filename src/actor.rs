@@ -23,7 +23,7 @@ impl Actor {
 
     fn run(&self, func: &str) -> Option<i32> {
         let output = Command::new("bash")
-            .arg(self.path.clone())
+            .arg(&self.path)
             .arg(func)
             .output()
             .expect("Could not execute a command");
