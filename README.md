@@ -12,13 +12,13 @@ Routines is configured through RON file like this, what contains a list of event
 [
     Event(
         name: "battery_level",
-        condition: Great,
+        condition: Less,
         value: "50",
         execute: "battery_saver.sh"
     ),
     Event(
         name: "cpu_frequency",
-        condition: Less,
+        condition: Great,
         value: "2000000",
         execute: "cpu_governor_saver.sh"
     ),
