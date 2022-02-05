@@ -14,9 +14,9 @@ pub struct Event {
 
 impl Event {
     pub fn load() -> Result<Vec<Event>, Error> {
-        let mut config = File::open(Path::new("config.ron"))?;
+        let mut config = File::open(Path::new("routines.ron"))?;
         let mut data = String::new();
-        config.read_to_string(&mut data);
+        config.read_to_string(&mut data)?;
 
         let events: Vec<Event> =
             ron::from_str(&data).expect("Could not convert the the config.ron file");
