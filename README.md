@@ -5,26 +5,24 @@ Routines is an application check events and execute actions based on it.
 
 ## Configuration
 
-Routines is configured through JSON file like this, what contains a list of events to be monitored.
+Routines is configured through RON file like this, what contains a list of events to be monitored.
 
 **Example:**
-```json
- {
-   "events":[
-        {
-            "name": "battery_level",
-            "condition": ">",
-            "value": 50,
-            "execute":"battery-saver.sh"
-        },
-        {
-            "name": "cpu_frequency",
-            "condition": "<",
-            "value": "2000000",
-            "execute":"cpu-governor-change.sh"
-        }
-   ]
-}
+```ron
+[
+    Event(
+        name: "battery_level",
+        condition: Great,
+        value: "50",
+        execute: "battery_saver.sh"
+    ),
+    Event(
+        name: "cpu_frequency",
+        condition: Less,
+        value: "2000000",
+        execute: "cpu_governor_saver.sh"
+    ),
+]
 ```
 
 ...

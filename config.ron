@@ -1,0 +1,14 @@
+[
+    Event(
+        name: "battery_level",
+        condition: Great,
+        value: "50",
+        execute: "battery_saver.sh"
+    ),
+    Event(
+        name: "cpu_frequency",
+        condition: Less,
+        value: "2000000",
+        execute: "cpu_governor_saver.sh"
+    ),
+]
