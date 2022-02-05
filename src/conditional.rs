@@ -1,15 +1,15 @@
-use crate::conditions::Conditions;
+use crate::condition::Condition;
 
 #[derive(Debug)]
 pub struct Conditional {
     pub data: String,
-    pub condition: (Conditions, String),
+    pub condition: (Condition, String),
 }
 impl Conditional {
     pub fn check(&self) -> bool {
         match self.condition.0 {
-            Conditions::Equal => self.data== self.condition.1,
-            Conditions::Great => {
+            Condition::Equal => self.data == self.condition.1,
+            Condition::Great => {
                 let data = self
                     .data
                     .parse::<i32>()
@@ -22,7 +22,7 @@ impl Conditional {
 
                 data > condition
             }
-            Conditions::Less => {
+            Condition::Less => {
                 let data = self
                     .data
                     .parse::<i32>()

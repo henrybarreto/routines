@@ -69,4 +69,19 @@ impl Monitor {
             move |data| Self::common(data, transport.clone()),
         )
     }
+
+    pub fn get_monitor_from_str(
+        &self,
+        name: &str,
+        transport: mpsc::Sender<String>,
+    ) -> JoinHandle<()> {
+        match name {
+            "cpu_governor" => self.cpu_governor(transport),
+            "cpu_frequency" => self.cpu_frequency(transport),
+            "battery_level" => self.battery_level(transport),
+            _ => {
+                panic!("Invalid event name to get the monitor")
+            }
+        }
+    }
 }

@@ -1,20 +1,24 @@
 use routines::conditional::Conditional;
-use routines::conditions::Conditions;
+use routines::condition::Condition;
 use routines::monitor::Monitor;
+use routines::event::Event;
 
 use std::borrow::Borrow;
 use std::sync::mpsc;
 
 fn main() {
-    let monitor = Monitor::new(1);
+    let monitor: Monitor = Monitor::new(1);
 
-    let (tf, rf): (mpsc::Sender<String>, mpsc::Receiver<String>) = mpsc::channel();
-    let (tb, rb): (mpsc::Sender<String>, mpsc::Receiver<String>) = mpsc::channel();
+    let events: Vec<Event> = Event::load().expect("Could not get the event configuration file");
 
-    let _frequency = monitor.cpu_frequency(tf.clone());
-    let _battery = monitor.battery_level(tb.clone());
+    let mut channels: Vec<mpsc::Receiver<String>> = Vec::<mpsc::Receiver<String>>::new();
+    for index in 0..events.len() {
+        let (tx, rx): (mpsc::Sender<String>, mpsc::Receiver<String>) = mpsc::channel();
+        monitor.get_monitor_from_str(&events[index].clone().name, tx.clone());
+        channels.push(rx)
+    }
 
-    let check = |name: String, params: (&mpsc::Receiver<String>, Conditions, String)| {
+    let check = |name: String, params: (&mpsc::Receiver<String>, Condition, String)| {
         let channel = params.0;
         let signal = params.1;
         let conditional = params.2;
@@ -27,25 +31,27 @@ fn main() {
 
         if event.check() {
             println!("{}", name);
-            println!("SIM");
+            println!("TRUE");
             println!("{}", data);
             println!("----------")
         } else {
             println!("{}", name);
-            println!("NAO");
+            println!("FALSE");
             println!("{}", data);
             println!("----------")
         }
     };
 
     loop {
-        check(
-            "cpu_frequency".to_string(),
-            (rf.borrow(), Conditions::Great, "770000".to_string()),
-        );
-        check(
-            "battery".to_string(),
-            (rb.borrow(), Conditions::Less, "100".to_string()),
-        );
+        for index in 0..events.len() {
+            check(
+                events[index].clone().name,
+                (
+                    channels[index].borrow(),
+                    events[index].clone().condition,
+                    events[index].clone().value,
+                ),
+            );
+        }
     }
 }
