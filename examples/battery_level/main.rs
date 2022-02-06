@@ -8,7 +8,7 @@ use std::sync::{mpsc, Arc};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    let default_path = &String::from("examples/battery_level/action.sh");
+    let default_path = &String::from("examples/battery_level/battery_save.sh");
     let path = args.get(1).unwrap_or(default_path);
 
     let monitor = Monitor::new(5);
