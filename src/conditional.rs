@@ -1,11 +1,11 @@
 use crate::condition::Condition;
 
 #[derive(Debug)]
-pub struct Conditional {
-    pub data: String,
-    pub condition: (Condition, String),
+pub struct Conditional<'a> {
+    pub data: &'a str,
+    pub condition: (Condition, &'a str),
 }
-impl Conditional {
+impl<'a> Conditional<'a> {
     pub fn check(&self) -> bool {
         match self.condition.0 {
             Condition::Equal => self.data == self.condition.1,
