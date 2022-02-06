@@ -10,3 +10,4 @@ authors = ["Henry Barreto <contato@henrybarreto.dev>"]
 [dependencies]
 serde = { version = "1", features = ["derive"] }
 ron = "0.7.0"
+logs = "0.5.0"
