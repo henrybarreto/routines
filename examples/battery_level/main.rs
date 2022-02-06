@@ -26,7 +26,7 @@ fn main() {
             .expect("Could not get the data from the pointer");
         let conditional = Conditional {
             data: &data,
-            condition: (Condition::Less, "100"),
+            condition: (Condition::Less, "40"),
         };
 
         if conditional.check() {
