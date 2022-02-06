@@ -1,7 +1,7 @@
 use std::fs::File;
 use std::io::Read;
 use std::path::Path;
-use std::sync::mpsc;
+use std::sync::{mpsc, Arc};
 use std::thread;
 use std::thread::JoinHandle;
 use std::time::Duration;
@@ -40,40 +40,34 @@ impl Monitor {
         })
     }
 
-    fn common(data: Vec<u8>, transport: mpsc::Sender<String>) {
-        let mut string = String::from_utf8_lossy(&data).to_string();
-        string = string.replace("\n", "");
+    fn common(data: Vec<u8>, transport: mpsc::Sender<Arc<str>>) {
+        let string = &*String::from_utf8_lossy(&data).to_string();
+        let string_no_ln = &*string.replace("\n", "").clone();
         transport
-            .send(string)
+            .send(Arc::from(string_no_ln))
             .expect("Could not send the data through the channel");
     }
 
-    pub fn cpu_governor(&self, transport: mpsc::Sender<String>) -> JoinHandle<()> {
-        Self::monitor(
-            Self::CPU_GOVERNOR_FILE_PATH,
-            self.interval,
-            move |data| Self::common(data, transport.clone()),
-        )
+    pub fn cpu_governor(&self, transport: mpsc::Sender<Arc<str>>) -> JoinHandle<()> {
+        Self::monitor(Self::CPU_GOVERNOR_FILE_PATH, self.interval, move |data| {
+            Self::common(data, transport.clone())
+        })
     }
-    pub fn cpu_frequency(&self, transport: mpsc::Sender<String>) -> JoinHandle<()> {
-        Self::monitor(
-            Self::CPU_FREQUENCY_FILE_PATH,
-            self.interval,
-            move |data| Self::common(data, transport.clone()),
-        )
+    pub fn cpu_frequency(&self, transport: mpsc::Sender<Arc<str>>) -> JoinHandle<()> {
+        Self::monitor(Self::CPU_FREQUENCY_FILE_PATH, self.interval, move |data| {
+            Self::common(data, transport.clone())
+        })
     }
-    pub fn battery_level(&self, transport: mpsc::Sender<String>) -> JoinHandle<()> {
-        Self::monitor(
-            Self::BATTERY_LEVEL_FILE_PATH,
-            self.interval,
-            move |data| Self::common(data, transport.clone()),
-        )
+    pub fn battery_level(&self, transport: mpsc::Sender<Arc<str>>) -> JoinHandle<()> {
+        Self::monitor(Self::BATTERY_LEVEL_FILE_PATH, self.interval, move |data| {
+            Self::common(data, transport.clone())
+        })
     }
 
     pub fn get_monitor_from_str(
         &self,
         name: &str,
-        transport: mpsc::Sender<String>,
+        transport: mpsc::Sender<Arc<str>>,
     ) -> JoinHandle<()> {
         match name {
             "cpu_governor" => self.cpu_governor(transport),
